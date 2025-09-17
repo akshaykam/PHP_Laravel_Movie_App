@@ -3,12 +3,34 @@ kind: Job
 metadata:
   name: backend-migration
 spec:
+  backoffLimit: 4
   template:
     spec:
       containers:
       - name: migrator
-        image: 543816070942.dkr.ecr.ap-south-1.amazonaws.com/movieapp-backend
+        image: 543816070942.dkr.ecr.ap-south-1.amazonaws.com/movieapp-backend:latest
         command: ["php", "artisan", "migrate", "--force"]
-        env: [same as deployment]
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: host
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: database
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
       restartPolicy: OnFailure
-      backoffLimit: 4
