@@ -3,6 +3,7 @@ name: Deploy Backend to EKS
 on:
   push:
     branches: [ master ]
+  workflow_dispatch:   # manual trigger
 
 env:
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
